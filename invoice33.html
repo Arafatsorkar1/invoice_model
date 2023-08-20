@@ -1,0 +1,205 @@
+
+  <td align="left" style="margin-bottom: 5px"><b>In Word :</b>{{ ucwords(str_replace('-', ' ', inWords($total))) }}</td>
+
+
+<div class="" style="width: 80%; margin-left: 2%;">
+   <div class="">
+       <div class="row">
+           <div class="">
+               <div class="col-md-6">
+                   <img src="{{ asset('assets/loginlogo.png') }}" alt="Logo" height="70px;">
+{{--                   <p>Dear {{ $billing->customer->c_name }}, {{ $billing->customer->org_name }}</p>--}}
+{{--                   <p>Mail Body</p>--}}
+{{--                   <strong>Description:</strong> {{ $billing->details }}<br><br>--}}
+{{--                   <strong>Total Amount:</strong> {{ $billing->total_amount }} TK<br><br>--}}
+               </div>
+
+
+               <div class="col-md-6 align-right" >
+
+                <table style="float: right ; margin-top: 50px">
+                    <thead>
+                    <tr>
+                        <td>Invoice Number:</td>
+                        <td>{{ $billing->invoice_no }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Description: </td>
+                        <td>{{ $billing->details }}</td>
+                    </tr>
+                    <tr>
+                        <td>Date : </td>
+                        <td>{{ $billing->start_date }}</td>
+                    </tr>
+
+                    </thead>
+                </table>
+
+           </div>
+       </div>
+   </div>
+
+
+{{--     @foreach($billing->customer as $details)--}}
+{{--   <strong>Service Name:</strong> {{ $details->projectName->name ?? '' }}<br><br>--}}
+{{--   <strong>Title:</strong> {{ $details->note }}<br><br>--}}
+{{--   <strong>Description:</strong> {{ $project_details->details }}<br><br>--}}
+{{--   <strong>Amount:</strong> {{ $details->subscription_fee }} TK<br><br>--}}
+{{--   <strong>Total Amount:</strong> {{ $details->price }} TK<br><br>--}}
+{{--   @endforeach--}}
+{{--    <p></p>--}}
+
+
+{{--     <div class="col-sm-1">--}}
+{{--        <dl id="dt-list-1" class="dl-horizontal">--}}
+{{--            <dt>Name: {{ $billing->customer->c_name }}</dt>--}}
+{{--            <dt>Phone: {{ $billing->customer->c_phone }}</dt>--}}
+
+{{--            @if($billing->customer->c_phone != null)--}}
+{{--            <dt>Email: {{ $billing->customer->c_email }}</dt>--}}
+{{--            @endif--}}
+
+{{--            @if($billing->customer->address != null)--}}
+{{--            <dt>Address: {{ $billing->customer->address }}</dt>--}}
+{{--            @endif--}}
+
+{{--            <div class="hr dotted"></div>--}}
+{{--        </dl>--}}
+{{--    </div>--}}
+
+
+    <h2 style="text-align: center">Invoice Report</h2>
+       <div class="row">
+           <div class="col-md-12">
+               <div class="col-md-6"> <table style=" float: left">
+                       <thead>
+                       <tr >
+                           <td colspan="2">Company Information</td>
+                       </tr>
+                       <tr>
+                           <td>Company Name:</td>
+                           <td>  {{ optional(optional(optional(auth()->user())->company)->group)->name }}</td>
+                       </tr>
+                       <tr>
+                           <td>Hotline: </td>
+                           <td>  {{ optional(optional(optional(auth()->user())->company)->group)->phone }}
+                           </td>
+                       </tr>
+
+                           <tr>
+                               <td>Email:</td>
+                               <td>  {{ optional(optional(optional(auth()->user())->company)->group)->email }}</td>
+                           </tr>
+
+
+{{--                       @if($billing->customer->address != null)--}}
+{{--                           <tr>--}}
+{{--                               <td>Address:</td>--}}
+{{--                               <td>{{ $billing->customer->address }}</td>--}}
+{{--                           </tr>--}}
+{{--                       @endif--}}
+                       </thead>
+                   </table></div>
+               <div class="col-md-6"> <table style="float: right">
+                       <thead>
+                       <tr >
+                           <td colspan="2">Client Information</td>
+                       </tr>
+                       <tr>
+                           <td>Name:</td>
+                           <td>{{ $billing->customer->c_name }}</td>
+                       </tr>
+                       <tr>
+                           <td>Organization Name:</td>
+                           <td>{{ $billing->customer->org_name }}</td>
+                       </tr>
+                       <tr>
+                           <td>Phone: </td>
+                           <td>{{ $billing->customer->c_phone }}</td>
+                       </tr>
+                       @if($billing->customer->c_phone != null)
+                           <tr>
+                               <td>Email:</td>
+                               <td>{{ $billing->customer->c_email }}</td>
+                           </tr>
+                       @endif
+
+                       @if($billing->customer->address != null)
+                           <tr>
+                               <td>Address:</td>
+                               <td>{{ $billing->customer->address }}</td>
+                           </tr>
+                       @endif
+                       </thead>
+                   </table></div>
+           </div>
+       </div>
+       <br>
+    <table style="width: 100%; border: none;">
+        <thead>
+        <tr>
+            <th style="text-align: left">Sl</th>
+            <th style="text-align: left">Title</th>
+            <th style="text-align: left">Billing Type</th>
+            <th style="text-align: right">Subscription Fee</th>
+            <th style="text-align: right">Total</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        @php
+            $total = 0;
+        @endphp
+        @foreach($billing->project_details as $i => $details)
+            @php
+                $total += $details->price;
+            @endphp
+            <tr>
+                <td>{{ $loop->index + 1 }}</td>
+                <td>Customer Support</td>
+                <td class="text-capitalize">{{ $details->billing_type }}</td>
+                 <td>{{ $details->subscription_fee }}</td>
+                <td style="text-align: right">{{ $details->subscription_fee }}</td>
+{{--                <td style="text-align: right">{{ $total }}</td>--}}
+            </tr>
+        @endforeach
+        </tbody>
+
+        <tfoot>
+        <tr>
+{{--            <th colspan="2" style="text-align: right"><strong>Total:</strong></th>--}}
+{{--            <th style="text-align: right">5</th>--}}
+            <td colspan="4" class="text-right">Total</td>
+            <th style="text-align: right">{{ $total }}</th>
+        </tr>
+        </tfoot>
+    </table>
+    <br><br>
+    <strong style="color:red;">Note: Don't Cross your daily sending limit. If you cross  your daily sending limit you may face many problems.</strong>
+    <br><br>
+    <p>Support</p>
+    =============================
+    <br><br>
+    <p>Do not hesitate to contact us if you feel any problem or need support. please open a ticket at https://www.smartsoftware.com.bd/ or Call +8801711d32328</p>
+    <p>Thank you for choosing us.</p>
+    <br><br>
+
+{{--    <div class="col-sm-6">--}}
+{{--        <dl id="dt-list-1" class="dl-horizontal">--}}
+{{--            <dt>SMART SOFTWARE LTD.</dt>--}}
+{{--            <dt>Hotline: +880123457923, +88037284652</dt>--}}
+{{--            <dt>Email: hello@smartsoftware.com.bd</dt>--}}
+{{--            <div class="hr dotted"></div>--}}
+{{--        </dl>--}}
+{{--    </div>--}}
+
+</div>
+    <div class="no-print" style="float: right">
+        <a href="javascript:void(0)" onclick="window.print()" class="btn btn-print"> Print</a>
+
+
+    </div>
+    <script>
+        window.print()
+    </script>
